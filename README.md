@@ -1,4 +1,4 @@
-# Claude Status
+# Claude Service Status
 
 > **非公式 (Unofficial)** — 本拡張機能は Anthropic 公式のものではなく、Anthropic とは一切関係ありません。"Claude" および "Anthropic" は Anthropic PBC の商標です。公開されている Statuspage の状態を表示する目的でのみ名称を使用しています。
 

@@ -1,7 +1,7 @@
 {
-  "name": "claude-status",
-  "displayName": "Claude Status",
-  "description": "Unofficial: show Claude (Anthropic) service status and incidents in the VS Code status bar. Not affiliated with Anthropic.",
+  "name": "claude-service-status",
+  "displayName": "Claude Service Status",
+  "description": "Unofficial: monitor Claude (Anthropic) service status, outages, and incidents from status.claude.com — right in your VS Code status bar. Not affiliated with Anthropic.",
   "version": "0.1.0",
   "publisher": "kpab",
   "icon": "icon.png",
@@ -11,9 +11,13 @@
     "claude",
     "anthropic",
     "status",
+    "service status",
     "statuspage",
     "incident",
-    "monitoring"
+    "outage",
+    "uptime",
+    "downtime",
+    "monitor"
   ],
   "repository": {
     "type": "git",
