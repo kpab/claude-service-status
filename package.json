@@ -2,7 +2,7 @@
   "name": "claude-service-status",
   "displayName": "Claude Service Status",
   "description": "Unofficial: monitor Claude (Anthropic) service status, outages, and incidents from status.claude.com — right in your VS Code status bar. Not affiliated with Anthropic.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "kpab",
   "icon": "icon.png",
   "license": "MIT",
