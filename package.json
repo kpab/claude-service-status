@@ -21,12 +21,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kpab/claude-status.git"
+    "url": "https://github.com/kpab/claude-service-status.git"
   },
   "bugs": {
-    "url": "https://github.com/kpab/claude-status/issues"
+    "url": "https://github.com/kpab/claude-service-status/issues"
   },
-  "homepage": "https://github.com/kpab/claude-status#readme",
+  "homepage": "https://github.com/kpab/claude-service-status#readme",
   "engines": {
     "vscode": "^1.75.0"
   },
