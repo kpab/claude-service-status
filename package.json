@@ -6,6 +6,14 @@
   "publisher": "p4ni",
   "license": "MIT",
   "author": "kpab",
+  "keywords": [
+    "claude",
+    "anthropic",
+    "status",
+    "statuspage",
+    "incident",
+    "monitoring"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/kpab/claude-status.git"

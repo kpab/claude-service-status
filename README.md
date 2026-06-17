@@ -51,3 +51,24 @@ vsce package        # claude-status-0.1.0.vsix が生成される
 - `GET /api/v2/summary.json` — 全体状態 + コンポーネント + 未解決インシデント
 - `GET /api/v2/status.json` — 全体インジケーターのみ（軽量）
 - `GET /api/v2/incidents/unresolved.json` — 進行中インシデントのみ
+
+## アイコンの追加方法
+
+VS Code Marketplace で表示されるアイコンを設定するには以下の手順を行う。
+
+**仕様**
+- サイズ: 128×128 px の PNG
+- ファイル名例: `icon.png`
+- 配置場所: リポジトリルート（`package.json` と同階層）
+
+**手順**
+1. 上記仕様の PNG を用意し、`icon.png` としてリポジトリルートに配置する。
+2. `package.json` に以下のフィールドを追加する（`"version"` の近くが見やすい）。
+
+   ```json
+   "icon": "icon.png",
+   ```
+
+3. `git add icon.png package.json` してコミットすれば、`vsce package` 時にアイコンが含まれる。
+
+> アイコンファイルが存在しない状態で `"icon"` フィールドを設定すると `vsce package` がエラーになるため、意図的に省略している。
