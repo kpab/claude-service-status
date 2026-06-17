@@ -46,6 +46,111 @@ function getConfig() {
   };
 }
 
+// ---- i18n ----
+type Lang = 'en' | 'ja';
+
+function getLang(): Lang {
+  const setting = vscode.workspace.getConfiguration('claudeStatus').get<string>('language', 'auto');
+  if (setting === 'ja' || setting === 'en') {
+    return setting;
+  }
+  return vscode.env.language?.toLowerCase().startsWith('ja') ? 'ja' : 'en';
+}
+
+const STATUS_DESC: Record<Lang, Record<string, string>> = {
+  en: {
+    none: 'All Systems Operational',
+    minor: 'Minor Service Outage',
+    major: 'Major Service Outage',
+    critical: 'Critical Service Outage',
+  },
+  ja: {
+    none: 'すべて正常に稼働しています',
+    minor: '軽微な障害が発生しています',
+    major: '重大な障害が発生しています',
+    critical: '深刻な障害が発生しています',
+  },
+};
+
+const COMPONENT_STATUS: Record<Lang, Record<string, string>> = {
+  en: {
+    operational: 'Operational',
+    degraded_performance: 'Degraded Performance',
+    partial_outage: 'Partial Outage',
+    major_outage: 'Major Outage',
+    under_maintenance: 'Under Maintenance',
+  },
+  ja: {
+    operational: '正常稼働',
+    degraded_performance: '性能低下',
+    partial_outage: '一部障害',
+    major_outage: '重大な障害',
+    under_maintenance: 'メンテナンス中',
+  },
+};
+
+const INCIDENT_STATUS: Record<Lang, Record<string, string>> = {
+  en: {
+    investigating: 'Investigating',
+    identified: 'Identified',
+    monitoring: 'Monitoring',
+    resolved: 'Resolved',
+    postmortem: 'Postmortem',
+    scheduled: 'Scheduled',
+    in_progress: 'In Progress',
+    verifying: 'Verifying',
+    completed: 'Completed',
+  },
+  ja: {
+    investigating: '調査中',
+    identified: '原因特定',
+    monitoring: '経過観察',
+    resolved: '解決済み',
+    postmortem: '事後分析',
+    scheduled: '予定',
+    in_progress: '進行中',
+    verifying: '確認中',
+    completed: '完了',
+  },
+};
+
+const UI: Record<Lang, Record<string, string>> = {
+  en: {
+    activeIncidents: 'Active Incidents',
+    components: 'Components',
+    recentHistory: 'Recent Incident History',
+    noActive: 'No active incidents.',
+    noHistory: 'No history available.',
+    updated: 'Updated',
+    lastUpdated: 'Last updated',
+    clickForDetails: 'click for details',
+    fetchFailed: 'Failed to fetch status',
+  },
+  ja: {
+    activeIncidents: '進行中のインシデント',
+    components: 'コンポーネント',
+    recentHistory: '最近のインシデント履歴',
+    noActive: '進行中のインシデントはありません。',
+    noHistory: '履歴がありません。',
+    updated: '更新',
+    lastUpdated: '最終更新',
+    clickForDetails: 'クリックで詳細',
+    fetchFailed: '状態を取得できませんでした',
+  },
+};
+
+function statusDescription(s: StatusSummary, lang: Lang): string {
+  return STATUS_DESC[lang][s.status.indicator] ?? s.status.description;
+}
+
+function prettyIncidentStatus(status: string, lang: Lang): string {
+  return INCIDENT_STATUS[lang][status] ?? status;
+}
+
+function fmtDate(d: string | Date, lang: Lang): string {
+  return new Date(d).toLocaleString(lang === 'ja' ? 'ja-JP' : 'en-US');
+}
+
 function fetchJson<T>(url: string): Promise<T> {
   return new Promise((resolve, reject) => {
     const req = https.get(url, { headers: { 'User-Agent': 'vscode-claude-status' } }, (res) => {
@@ -84,11 +189,14 @@ function indicatorVisual(indicator: string): { icon: string; bg?: vscode.ThemeCo
   }
 }
 
-function prettyComponent(status: string): string {
-  return status
-    .split('_')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
+function prettyComponent(status: string, lang: Lang): string {
+  return (
+    COMPONENT_STATUS[lang][status] ??
+    status
+      .split('_')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ')
+  );
 }
 
 function componentIcon(status: string): string {
@@ -112,6 +220,8 @@ function openIncidents(s: StatusSummary): Incident[] {
 }
 
 function render(s: StatusSummary) {
+  const lang = getLang();
+  const t = UI[lang];
   const v = indicatorVisual(s.status.indicator);
   const open = openIncidents(s);
   statusBarItem.text = open.length ? `${v.icon} Claude (${open.length})` : `${v.icon} Claude`;
@@ -119,22 +229,22 @@ function render(s: StatusSummary) {
 
   const md = new vscode.MarkdownString();
   md.supportThemeIcons = true;
-  md.appendMarkdown(`**${s.status.description}**\n\n`);
+  md.appendMarkdown(`**${statusDescription(s, lang)}**\n\n`);
 
   if (open.length) {
-    md.appendMarkdown(`---\n\n**進行中のインシデント**\n\n`);
+    md.appendMarkdown(`---\n\n**${t.activeIncidents}**\n\n`);
     for (const i of open) {
-      md.appendMarkdown(`- $(alert) ${i.name} _(${i.status})_\n`);
+      md.appendMarkdown(`- $(alert) ${i.name} _(${prettyIncidentStatus(i.status, lang)})_\n`);
     }
     md.appendMarkdown('\n');
   }
 
-  md.appendMarkdown(`---\n\n**コンポーネント**\n\n`);
+  md.appendMarkdown(`---\n\n**${t.components}**\n\n`);
   for (const c of s.components.filter((c) => !c.group)) {
-    md.appendMarkdown(`- ${componentIcon(c.status)} ${c.name}: ${prettyComponent(c.status)}\n`);
+    md.appendMarkdown(`- ${componentIcon(c.status)} ${c.name}: ${prettyComponent(c.status, lang)}\n`);
   }
 
-  md.appendMarkdown(`\n_更新: ${new Date(s.page.updated_at).toLocaleString()} — クリックで詳細_`);
+  md.appendMarkdown(`\n_${t.updated}: ${fmtDate(s.page.updated_at, lang)} — ${t.clickForDetails}_`);
   statusBarItem.tooltip = md;
 }
 
@@ -149,7 +259,7 @@ async function refresh(showError = false) {
     lastError = e instanceof Error ? e.message : String(e);
     statusBarItem.text = '$(cloud) Claude: ?';
     statusBarItem.backgroundColor = undefined;
-    statusBarItem.tooltip = `状態を取得できませんでした: ${lastError}`;
+    statusBarItem.tooltip = `${UI[getLang()].fetchFailed}: ${lastError}`;
     if (showError) {
       vscode.window.showErrorMessage(`Claude Status: ${lastError}`);
     }
@@ -175,6 +285,8 @@ function escapeHtml(s: string): string {
 }
 
 function detailsHtml(s: StatusSummary): string {
+  const lang = getLang();
+  const t = UI[lang];
   const v = indicatorVisual(s.status.indicator);
   const dot = s.status.indicator === 'none' ? '#3fb950' : s.status.indicator === 'minor' ? '#d29922' : '#f85149';
   void v;
@@ -187,11 +299,11 @@ function detailsHtml(s: StatusSummary): string {
     return `
       <div class="card">
         <div class="card-head">
-          <span class="badge badge-${i.status}">${escapeHtml(i.status)}</span>
+          <span class="badge badge-${i.status}">${escapeHtml(prettyIncidentStatus(i.status, lang))}</span>
           <a href="${escapeHtml(i.shortlink)}">${escapeHtml(i.name)}</a>
         </div>
         ${latest ? `<p class="body">${escapeHtml(latest.body)}</p>` : ''}
-        <p class="meta">更新: ${new Date(i.updated_at).toLocaleString()}</p>
+        <p class="meta">${t.updated}: ${fmtDate(i.updated_at, lang)}</p>
       </div>`;
   };
 
@@ -201,13 +313,13 @@ function detailsHtml(s: StatusSummary): string {
       (c) => `
       <tr>
         <td>${escapeHtml(c.name)}</td>
-        <td class="${c.status === 'operational' ? 'ok' : 'warn'}">${escapeHtml(prettyComponent(c.status))}</td>
+        <td class="${c.status === 'operational' ? 'ok' : 'warn'}">${escapeHtml(prettyComponent(c.status, lang))}</td>
       </tr>`
     )
     .join('');
 
   return `<!DOCTYPE html>
-<html lang="ja">
+<html lang="${lang}">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -234,17 +346,17 @@ function detailsHtml(s: StatusSummary): string {
 </style>
 </head>
 <body>
-  <h1><span class="dot"></span> ${escapeHtml(s.status.description)}</h1>
-  <p class="updated">最終更新: ${new Date(s.page.updated_at).toLocaleString()} · <a href="${escapeHtml(s.page.url)}">status.claude.com</a></p>
+  <h1><span class="dot"></span> ${escapeHtml(statusDescription(s, lang))}</h1>
+  <p class="updated">${t.lastUpdated}: ${fmtDate(s.page.updated_at, lang)} · <a href="${escapeHtml(s.page.url)}">status.claude.com</a></p>
 
-  <h2>進行中のインシデント</h2>
-  ${open.length ? open.map(incidentBlock).join('') : '<p class="empty">進行中のインシデントはありません。</p>'}
+  <h2>${t.activeIncidents}</h2>
+  ${open.length ? open.map(incidentBlock).join('') : `<p class="empty">${t.noActive}</p>`}
 
-  <h2>コンポーネント</h2>
+  <h2>${t.components}</h2>
   <table><tbody>${componentRows}</tbody></table>
 
-  <h2>最近のインシデント履歴</h2>
-  ${recent.length ? recent.map(incidentBlock).join('') : '<p class="empty">履歴がありません。</p>'}
+  <h2>${t.recentHistory}</h2>
+  ${recent.length ? recent.map(incidentBlock).join('') : `<p class="empty">${t.noHistory}</p>`}
 </body>
 </html>`;
 }
@@ -270,14 +382,15 @@ async function showDetails() {
 }
 
 function errorHtml(message: string): string {
+  const lang = getLang();
   return `<!DOCTYPE html>
-<html lang="ja"><head><meta charset="UTF-8" />
+<html lang="${lang}"><head><meta charset="UTF-8" />
 <style>
   body { font-family: var(--vscode-font-family); color: var(--vscode-foreground); padding: 1rem; }
   .err { color: #f85149; font-size: .85rem; }
 </style></head>
 <body>
-  <p class="err">状態を取得できませんでした</p>
+  <p class="err">${UI[lang].fetchFailed}</p>
   <p style="opacity:.7;font-size:.8rem;">${escapeHtml(message)}</p>
 </body></html>`;
 }

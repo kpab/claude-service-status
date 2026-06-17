@@ -43,6 +43,7 @@ After installation, Claude's status appears in the status bar automatically.
 
 | Setting key | Default | Description |
 | --- | --- | --- |
+| `claudeStatus.language` | `auto` | Display language: `auto` (follows VS Code), `en`, or `ja`. When set to `ja`, status text and labels are shown in Japanese. |
 | `claudeStatus.statusPageUrl` | `https://status.claude.com` | Base URL of the Statuspage to monitor |
 | `claudeStatus.refreshInterval` | `60` | Polling interval (seconds, minimum 15) |
 
@@ -106,6 +107,7 @@ Claude (Anthropic) のサービス状態を **VS Code のステータスバー**
 
 | 設定キー | 既定値 | 説明 |
 | --- | --- | --- |
+| `claudeStatus.language` | `auto` | 表示言語：`auto`（VS Code に追従）・`en`・`ja`。`ja` を選ぶと状態表示やラベルが日本語になります。 |
 | `claudeStatus.statusPageUrl` | `https://status.claude.com` | 監視対象の Statuspage ベース URL |
 | `claudeStatus.refreshInterval` | `60` | ポーリング間隔（秒・最小 15）|
 
