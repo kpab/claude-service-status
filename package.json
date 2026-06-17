@@ -1,0 +1,55 @@
+{
+  "name": "claude-status",
+  "displayName": "Claude Status",
+  "description": "Show Claude (Anthropic) service status and incidents in the VS Code status bar.",
+  "version": "0.1.0",
+  "publisher": "p4ni",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "claudeStatus.refresh",
+        "title": "Claude Status: Refresh Now"
+      },
+      {
+        "command": "claudeStatus.showDetails",
+        "title": "Claude Status: Show Details"
+      }
+    ],
+    "configuration": {
+      "title": "Claude Status",
+      "properties": {
+        "claudeStatus.statusPageUrl": {
+          "type": "string",
+          "default": "https://status.claude.com",
+          "description": "Base URL of the Atlassian Statuspage to monitor."
+        },
+        "claudeStatus.refreshInterval": {
+          "type": "number",
+          "default": 60,
+          "minimum": 15,
+          "description": "Polling interval in seconds (minimum 15 to respect the Statuspage rate limit)."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "vscode:prepublish": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.0",
+    "@types/vscode": "^1.75.0",
+    "typescript": "^5.4.0"
+  }
+}
