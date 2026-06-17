@@ -1,9 +1,19 @@
 {
   "name": "claude-status",
   "displayName": "Claude Status",
-  "description": "Show Claude (Anthropic) service status and incidents in the VS Code status bar.",
+  "description": "Unofficial: show Claude (Anthropic) service status and incidents in the VS Code status bar. Not affiliated with Anthropic.",
   "version": "0.1.0",
   "publisher": "p4ni",
+  "license": "MIT",
+  "author": "kpab",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kpab/claude-status.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kpab/claude-status/issues"
+  },
+  "homepage": "https://github.com/kpab/claude-status#readme",
   "engines": {
     "vscode": "^1.75.0"
   },

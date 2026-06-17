@@ -1,5 +1,7 @@
 # Claude Status
 
+> **非公式 (Unofficial)** — 本拡張機能は Anthropic 公式のものではなく、Anthropic とは一切関係ありません。"Claude" および "Anthropic" は Anthropic PBC の商標です。公開されている Statuspage の状態を表示する目的でのみ名称を使用しています。
+
 VS Code のステータスバーに Claude (Anthropic) のサービス状態を表示し、進行中・過去のインシデントを確認できる拡張機能。データ元は公式の Atlassian Statuspage (`status.claude.com`) の v2 JSON API。
 
 ## 表示
