@@ -154,6 +154,10 @@ async function refresh(showError = false) {
       vscode.window.showErrorMessage(`Claude Status: ${lastError}`);
     }
   }
+  viewProvider?.update();
+  if (panel && lastSummary) {
+    panel.webview.html = detailsHtml(lastSummary);
+  }
 }
 
 function restartTimer() {
@@ -265,6 +269,46 @@ async function showDetails() {
   panel.webview.html = detailsHtml(lastSummary);
 }
 
+function errorHtml(message: string): string {
+  return `<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8" />
+<style>
+  body { font-family: var(--vscode-font-family); color: var(--vscode-foreground); padding: 1rem; }
+  .err { color: #f85149; font-size: .85rem; }
+</style></head>
+<body>
+  <p class="err">状態を取得できませんでした</p>
+  <p style="opacity:.7;font-size:.8rem;">${escapeHtml(message)}</p>
+</body></html>`;
+}
+
+class StatusViewProvider implements vscode.WebviewViewProvider {
+  private view: vscode.WebviewView | undefined;
+
+  resolveWebviewView(webviewView: vscode.WebviewView): void {
+    this.view = webviewView;
+    webviewView.webview.options = { enableScripts: false };
+    webviewView.onDidDispose(() => (this.view = undefined));
+    this.update();
+    if (!lastSummary && !lastError) {
+      void refresh();
+    }
+  }
+
+  update(): void {
+    if (!this.view) {
+      return;
+    }
+    if (lastSummary) {
+      this.view.webview.html = detailsHtml(lastSummary);
+    } else if (lastError) {
+      this.view.webview.html = errorHtml(lastError);
+    }
+  }
+}
+
+let viewProvider: StatusViewProvider | undefined;
+
 export function activate(context: vscode.ExtensionContext) {
   statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
   statusBarItem.command = 'claudeStatus.showDetails';
@@ -272,7 +316,9 @@ export function activate(context: vscode.ExtensionContext) {
   statusBarItem.show();
   context.subscriptions.push(statusBarItem);
 
+  viewProvider = new StatusViewProvider();
   context.subscriptions.push(
+    vscode.window.registerWebviewViewProvider('claudeStatus.statusView', viewProvider),
     vscode.commands.registerCommand('claudeStatus.refresh', () => refresh(true)),
     vscode.commands.registerCommand('claudeStatus.showDetails', () => showDetails()),
     vscode.workspace.onDidChangeConfiguration((e) => {

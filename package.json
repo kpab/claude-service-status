@@ -25,6 +25,24 @@
         "title": "Claude Status: Show Details"
       }
     ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "claudeStatus",
+          "title": "Claude Status",
+          "icon": "$(cloud)"
+        }
+      ]
+    },
+    "views": {
+      "claudeStatus": [
+        {
+          "id": "claudeStatus.statusView",
+          "name": "Status",
+          "type": "webview"
+        }
+      ]
+    },
     "configuration": {
       "title": "Claude Status",
       "properties": {
