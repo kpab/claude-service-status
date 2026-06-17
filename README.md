@@ -71,4 +71,4 @@ VS Code Marketplace で表示されるアイコンを設定するには以下の
 
 3. `git add icon.png package.json` してコミットすれば、`vsce package` 時にアイコンが含まれる。
 
-> アイコンファイルが存在しない状態で `"icon"` フィールドを設定すると `vsce package` がエラーになるため、意図的に省略している。
+現在は `icon.png`（256×256 PNG）をルートに配置し、`package.json` に `"icon": "icon.png"` を設定済み。

@@ -4,6 +4,7 @@
   "description": "Unofficial: show Claude (Anthropic) service status and incidents in the VS Code status bar. Not affiliated with Anthropic.",
   "version": "0.1.0",
   "publisher": "p4ni",
+  "icon": "icon.png",
   "license": "MIT",
   "author": "kpab",
   "keywords": [
