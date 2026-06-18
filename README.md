@@ -19,6 +19,14 @@ Know about an outage or incident without ever leaving the editor.
 
 ---
 
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/kpab/claude-service-status/main/images/screenshot-en.png" alt="Claude Service Status details panel" width="380" />
+
+</div>
+
+---
+
 ## Features
 
 - **Always on the status bar** — See the current service status at a glance, shown as `$(pass-filled) Claude`.
@@ -82,6 +90,12 @@ Please report bugs and feature requests at [GitHub Issues](https://github.com/kp
 Claude (Anthropic) のサービス状態を **VS Code のステータスバー**に常時表示する拡張機能です。障害やインシデントが起きていないか、エディタから離れずに確認できます。
 
 > **⚠️ 非公式 (Unofficial)** — 本拡張機能は Anthropic 公式のものではなく、Anthropic とは一切関係ありません。"Claude" および "Anthropic" は Anthropic PBC の商標です。公開されている Statuspage の状態を表示する目的でのみ名称を使用しています。
+
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/kpab/claude-service-status/main/images/screenshot-ja.png" alt="Claude Service Status 詳細パネル" width="380" />
+
+</div>
 
 ### 特長
 
