@@ -1,6 +1,19 @@
+<div align="center">
+
 # Claude Service Status
 
-A VS Code extension that keeps Claude (Anthropic) service status **always visible in your status bar**. Check whether an outage or incident is happening without ever leaving the editor.
+**Claude (Anthropic) service status — always visible in your VS Code status bar.**
+Know about an outage or incident without ever leaving the editor.
+
+[![Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/kpab.claude-service-status?style=flat-square&label=Marketplace&color=D97757)](https://marketplace.visualstudio.com/items?itemName=kpab.claude-service-status)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/kpab.claude-service-status?style=flat-square&label=Installs&color=D97757)](https://marketplace.visualstudio.com/items?itemName=kpab.claude-service-status)
+[![Downloads](https://img.shields.io/visual-studio-marketplace/d/kpab.claude-service-status?style=flat-square&label=Downloads&color=D97757)](https://marketplace.visualstudio.com/items?itemName=kpab.claude-service-status)
+<br/>
+[![Stars](https://img.shields.io/github/stars/kpab/claude-service-status?style=flat-square&color=8957e5)](https://github.com/kpab/claude-service-status)
+[![License](https://img.shields.io/github/license/kpab/claude-service-status?style=flat-square&color=3fb950)](./LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/kpab/claude-service-status?style=flat-square)](https://github.com/kpab/claude-service-status/commits)
+
+</div>
 
 > **⚠️ Unofficial** — This extension is not affiliated with Anthropic in any way. "Claude" and "Anthropic" are trademarks of Anthropic PBC. The names are used solely to indicate the publicly available Statuspage being displayed.
 
